@@ -28,6 +28,7 @@ pip3 install powerline-status powerline-gitstatus
 ```bash
 git config --global user.name "Márton Torner"
 git config --global user.email torner.marton@gmail.com
+git config --global pull.ff only
 git config --global alias.co checkout
 git config --global alias.br branch
 git config --global alias.st status
