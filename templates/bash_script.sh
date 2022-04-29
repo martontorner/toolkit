@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 
 usage() {
   echo "Usage: bash_script.sh [OPTIONS] EXAMPLE_ARGUMENT
