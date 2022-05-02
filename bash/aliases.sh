@@ -7,7 +7,7 @@ alias nb='jupyter notebook'
 alias a='. venv/bin/activate'
 
 alias hostfile='sudo vim /etc/hosts'
-alias ip='curl https://api.ipify.org ; echo'
+alias gip='curl https://api.ipify.org ; echo'
 alias lip='ifconfig | egrep -o $IP_REGEX'
 
 alias d='docker'
