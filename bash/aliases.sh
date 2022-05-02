@@ -1,5 +1,3 @@
-set -e
-
 alias ll='ls -lGahF'
 alias p='cd ~/git/'
 
@@ -21,6 +19,3 @@ alias cwn='c down'
 
 alias utcnow='date -u "+%Y-%m-%dT%H:%M:%SZ"'
 alias epochnow='python3 -c "import time;print(time.time_ns())"'
-
-set +e
-
