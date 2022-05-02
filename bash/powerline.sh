@@ -1,4 +1,4 @@
-if command -v pip &> /dev/null
+if command -v pip &> /dev/null && command -v powerline-daemon &> /dev/null
 then
   POWERLINE_ROOT=$(pip show powerline-status | grep Location | cut -d" " -f2)
 
