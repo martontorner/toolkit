@@ -4,7 +4,7 @@ alias p='cd ~/git/'
 alias v='vim'
 
 alias nb='jupyter notebook'
-alias a='. venv/bin/activate'
+alias a='. venv/bin/activate || . venv/Scripts/activate'
 
 alias hostfile='sudo vim /etc/hosts'
 alias gip='curl https://api.ipify.org ; echo'
