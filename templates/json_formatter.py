@@ -1,4 +1,8 @@
 # coding=utf-8
+__all__ = [
+    "JsonFormatter"
+]
+
 import datetime
 import io
 import logging
@@ -107,3 +111,25 @@ class JsonFormatter(logging.Formatter):
                 log_dict[self._rename_fields.get(field, field)] = value
 
         return JsonFormatter.formatter({**log_dict, **self._static_fields})
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+
+    logger: logging.Logger = logging.getLogger()
+    logger.handlers[0].setFormatter(
+        JsonFormatter(
+            fields=["name", "message", "exc_info"],
+            rename_fields={"name": "log.logger"},
+            static_fields={"static_field": "static value"}
+        )
+    )
+
+    logger.info("Example info")
+
+    try:
+        raise ValueError("Example exception")
+    except Exception as e:
+        logger.error(e, exc_info=e)
+        logger.exception(e)  # No need for exc_info
+        logger.critical(e, exc_info=e)
