@@ -5,9 +5,16 @@ Install requirements:
 grep -vE '^#' requirements.txt | xargs sudo apt install -yq
 ```
 
-In .bashrc or .bash_profile:
+Install toolkit:
 ```bash
-. ~/git/toolkit/bash/include.sh
+echo ". ~/git/toolkit/bash/include.sh" >> ~/.bashrc
+# OR
+echo ". ~/git/toolkit/bash/include.sh" >> ~/.bash_profile
+```
+
+Configure git:
+```bash
+./setup.sh
 ```
 
 ## Figlet banner
