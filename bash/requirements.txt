@@ -1,5 +1,4 @@
 tmux
-figlet
 vim
 jq
 tree

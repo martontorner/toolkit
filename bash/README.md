@@ -14,6 +14,7 @@ In .bashrc or .bash_profile:
 
 See example in banner.txt
 ```bash
+sudo apt install -yq figlet
 printf "WELCOME\nMR.TORNER" | figlet -cWw $(tput cols) -f standard
 ```
 
