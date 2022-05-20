@@ -16,8 +16,8 @@ function ascii {
 export -f ascii
 
 # Enter a docker container bash
-dexec () {
+dexecb () {
     docker exec -it $1 /bin/bash
 }
-export -f dexec
+export -f dexecb
 
