@@ -1,4 +1,4 @@
-alias ll='ls -lGahF'
+alias ll='ls -lahF --color=auto'
 alias p='cd ~/git/'
 
 alias v='vim'
