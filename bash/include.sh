@@ -1,11 +1,11 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-. "$DIR"/variables.sh
-. "$DIR"/aliases.sh
-. "$DIR"/functions.sh
-. "$DIR"/tmux.sh
+. "$DIR"/tools/variables.sh
+. "$DIR"/tools/aliases.sh
+. "$DIR"/tools/functions.sh
+. "$DIR"/tools/autocomplete.sh
+. "$DIR"/tools/tmux.sh
 
-cat "$DIR"/banner.txt
-echo ""
+. "$DIR"/tools/banner.sh
 
-. "$DIR"/powerline.sh
+. "$DIR"/tools/powerline.sh

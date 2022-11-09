@@ -1,32 +1,37 @@
 # Bash utils
 
-Install requirements:
+## Install system requirements
 ```bash
-grep -vE '^#' requirements.txt | xargs sudo apt install -yq
+curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requirements/system.txt | grep -vE '^#' | xargs sudo apt install -yq
 ```
 
-Install toolkit:
+## Install toolkit
+
 ```bash
-echo ". ~/git/toolkit/bash/include.sh" >> ~/.bashrc
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > .toolkit
+```
+
+```bash
+echo ". ~/.toolkit" >> ~/.bashrc
 # OR
-echo ". ~/git/toolkit/bash/include.sh" >> ~/.bash_profile
+echo ". ~/.toolkit" >> ~/.bash_profile
 ```
 
-Configure git:
+## Configure git
 ```bash
-./setup.sh
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/configure/git.sh | grep -vE '^#')
 ```
 
-## Figlet banner
+## Install Powerline
 
-See example in banner.txt
+```bash
+curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requirements/powerline.txt | grep -vE '^#' | xargs pip3 install
+```
+
+## Create a figlet banner
+
+See example in banner.sh
 ```bash
 sudo apt install -yq figlet
 printf "WELCOME\nMR.TORNER" | figlet -cWw $(tput cols) -f standard
-```
-
-## Powerline
-
-```bash
-pip3 install powerline-status powerline-gitstatus
 ```
