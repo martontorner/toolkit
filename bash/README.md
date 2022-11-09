@@ -8,13 +8,13 @@ curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requi
 ## Install toolkit
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > .toolkit
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > .toolkitrc
 ```
 
 ```bash
-echo ". ~/.toolkit" >> ~/.bashrc
+echo ". ~/.toolkitrc" >> ~/.bashrc
 # OR
-echo ". ~/.toolkit" >> ~/.bash_profile
+echo ". ~/.toolkitrc" >> ~/.bash_profile
 ```
 
 ## Configure git
