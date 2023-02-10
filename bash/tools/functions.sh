@@ -1,4 +1,4 @@
-# Print ASCII table (decimal (d), octal (o), hex (h))
+# Print ASCII table (decimal (d), octal (o), hex (h)) - works only for MAC
 function ascii {
   if [ -z "$1" ]; then
     echo "ascii: Print ASCII table
@@ -16,8 +16,8 @@ function ascii {
 export -f ascii
 
 # Enter a docker container bash
-dexecb () {
-    docker exec -it $1 /bin/bash
+dxcb () {
+    dxc $1 /bin/bash
 }
-export -f dexecb
+export -f dxcb
 

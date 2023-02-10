@@ -10,10 +10,13 @@ _docker_containername_completions()
 
 # For alias d
 complete -F _docker d
-# For alias dexec
-complete -F _docker_containername_completions dexec
+
+# For aliases dlg and dxc
+complete -F _docker_containername_completions dlg
+complete -F _docker_containername_completions dxc
+
 # For alias c
 complete -F _docker_compose c
 
-# For function dexecb
-complete -F _docker_containername_completions dexecb
+# For function dxcb
+complete -F _docker_containername_completions dxcb

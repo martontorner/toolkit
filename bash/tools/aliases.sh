@@ -11,8 +11,11 @@ alias gip='curl https://api.ipify.org ; echo'
 alias lip='ifconfig | egrep -o $IP_REGEX'
 
 alias d='docker'
-alias dls='docker ps -a --no-trunc'
-alias dexec='docker exec -it'
+alias dls='d ps --no-trunc'
+alias dla='d ps -a --no-trunc'
+alias dli='d images'
+alias dlg='d logs'
+alias dxc='d exec -it'
 
 
 alias c='docker compose'
