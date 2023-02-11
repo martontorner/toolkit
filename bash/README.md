@@ -8,7 +8,7 @@ curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requi
 ## Install toolkit
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > .toolkitrc
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > ~/.toolkitrc
 ```
 
 ```bash

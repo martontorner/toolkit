@@ -1,5 +1,5 @@
 # Print ASCII table (decimal (d), octal (o), hex (h)) - works only for MAC
-function ascii {
+function ascii () {
   if [ -z "$1" ]; then
     echo "ascii: Print ASCII table
 
@@ -16,8 +16,20 @@ function ascii {
 export -f ascii
 
 # Enter a docker container bash
-dxcb () {
+function dxcb () {
     dxc $1 /bin/bash
 }
 export -f dxcb
 
+
+# Update installed toolkit
+function update_toolkit () {
+  path=$1
+
+  if [ -z "$1" ]; then
+    path="~/.toolkitrc"
+    echo "Using default path: ${path}"
+  fi
+
+  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > $path
+}
