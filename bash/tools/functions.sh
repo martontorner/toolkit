@@ -16,11 +16,29 @@ function ascii () {
 export -f ascii
 
 # Enter a docker container bash
-function dxcb () {
+function docker_exec_bash () {
     dxc $1 /bin/bash
 }
-export -f dxcb
+export -f docker_exec_bash
+alias dxcb='docker_exec_bash'
 
+# Clone a git repo from my own account by name
+function github_clone_own () {
+  if [ -z "$1" ]; then
+    echo "github_clone_own: Clone a git repo from my own account by name
+
+    Usage: github_clone_own <name>
+    "
+
+    return;
+  fi
+
+  name=$1
+
+  git clone "git@github.com:tornermarton/${name}.git"
+}
+export -f github_clone_own
+alias ghco='github_clone_own'
 
 # Update installed toolkit
 function update_toolkit () {
@@ -33,3 +51,4 @@ function update_toolkit () {
 
   bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > $path
 }
+export -f update_toolkit
