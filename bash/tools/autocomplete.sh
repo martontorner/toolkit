@@ -8,6 +8,23 @@ _docker_containername_completions()
     COMPREPLY=( $(compgen -W "${containers}" "${parameter}") )
 }
 
+_cd_repo()
+{
+    local GIT_DIR=~/git/
+    local cmd=$1 cur=$2 pre=$3
+    local arr i file
+
+    arr=( $( cd "$GIT_DIR" && compgen -d -- "$cur" ) )
+    COMPREPLY=()
+    for ((i = 0; i < ${#arr[@]}; ++i)); do
+        file=${arr[i]}
+        if [[ -d $GIT_DIR/$file ]]; then
+            file=$file/
+        fi
+        COMPREPLY[i]=$file
+    done
+}
+
 # For alias d
 complete -F _docker d
 
@@ -19,4 +36,9 @@ complete -F _docker_containername_completions dxc
 complete -F _docker_compose c
 
 # For function dxcb
+complete -F _docker_containername_completions docker_exec_bash
 complete -F _docker_containername_completions dxcb
+
+# for function cd_repo
+complete -F _cd_repo -o nospace cd_repo
+complete -F _cd_repo -o nospace cdr
