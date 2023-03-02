@@ -1,7 +1,27 @@
 alias ll='ls -lahF --color=auto'
+alias tree='tree -C --dirsfirst'
+alias ..='cd ..'
+alias ...='cd ../..'
 alias p='cd ~/git/'
 
+alias h='history | tail -n 50'
+
+alias g='git'
+alias gpl='g pull'
+alias gps='g push'
+alias gc='g commit'
+alias gcm='gc -m'
+alias gca='gc --amend'
+alias gst='g status -s'
+alias gco='g checkout'
+alias gf='g fetch'
+alias gfa='gf --all'
+alias gh='g log --pretty=format:"%C(green)[%h]%C(reset) %<(65)%s %C(yellow)[%ad]%C(reset) %C(bold red)%an%C(reset) %C(blue)%d%C(reset)" --graph --date=format-local:"%Y-%m-%d %H:%M:%S"'
+alias gha='gh --all'
+alias ghs='gh -n 20'
+
 alias v='vim'
+alias grep='grep --color=auto'
 
 alias nb='jupyter notebook'
 alias a='. venv/bin/activate || . venv/Scripts/activate'
@@ -16,7 +36,6 @@ alias dla='d ps -a --no-trunc'
 alias dli='d images'
 alias dlg='d logs'
 alias dxc='d exec -it'
-
 
 alias c='docker compose'
 alias cup='c up -d'
