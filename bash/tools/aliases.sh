@@ -7,7 +7,7 @@ alias p='cd ~/git/'
 alias h='history | tail -n 50'
 
 alias g='git'
-alias gpl='g pull'
+alias gpl='g pull --rebase=true --prune --tags --verbose'
 alias gps='g push'
 alias gc='g commit'
 alias gcm='gc -m'
