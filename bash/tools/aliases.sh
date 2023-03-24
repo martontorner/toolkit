@@ -8,7 +8,7 @@ alias h='history | tail -n 50'
 
 alias g='git'
 alias gpl='g pull --rebase=true --prune --tags --verbose'
-alias gph='g push'
+alias gps='g push'
 alias gc='g commit'
 alias gcm='gc -m'
 alias gca='gc --amend'
