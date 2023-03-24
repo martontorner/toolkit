@@ -100,11 +100,11 @@ function update_toolkit () {
   path=$1
 
   if [ -z "$1" ]; then
-    path="~/.toolkitrc"
+    path="${HOME}/.toolkitrc"
     echo "Using default path: ${path}"
   fi
 
-  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > $path
+  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > "${path}"
 }
 
 set +e
