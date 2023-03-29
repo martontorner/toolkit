@@ -2,129 +2,165 @@
 ## A simplified powerline prompt
 #
 
-#  ✓ victor ⏻ 94% ⏳ ~/bin master  ✔ 
-#  |   |    |     |    |     |- Git status
-#  |   |    |     |    |- PWD
-#  |   |    |     |- sudo status
-#  |   |    |- battery indicator and percentage
-#  |   |- User
-#  |- $?
-
-## User choices
-battery_info="n"
-sudo_info="y"
-# Choose from: ⌚, ⏳, ✰, ⵌ, ✷
-sudo_icon="ⵌ"
-
-_foreground () {
+_with_color () {
   color=$1
 
-  return "\[\\033[38;5;${color}m\]"
+  printf "\001\e[${color}m\002"
 }
 
-_background () {
-  color=$1
-
-  return "\[\\033[48;5;${color}m\]"
+_user_status () {
+  _with_color '0;38;5;231;48;5;31;1'
+  printf " $(whoami) "
+  _with_color '0;38;5;31;48;5;166;22'
+  printf ""
 }
 
-# Colors
-PS_Green='\[\e[32m\]'
-PS_Red='\[\e[31m\]'
-# Background
-On_Black='\001\e[40m\002'
-On_Grey='\001\e[47m\002'
-On_Darkgrey='\001\e[100m\002'
-On_Yellow='\001\e[43m\002'
-On_Purple='\001\e[45m\002'
-On_Green='\001\e[42m\002'
-On_Blue='\001\e[44m\002'
-On_Red='\001\e[41m\002'
-# Foreground
-Black='\001\e[0;30m\002'
-Grey='\001\e[0;37m\002'
-Darkgrey='\001\e[0;90m\002'
-White='\001\e[0;97m\002'
-Purple='\001\e[0;35m\002'
-Green='\001\e[0;32m\002'
-Blue='\001\e[0;34m\002'
-Yellow='\001\e[0;33m\002'
-Red='\001\e[0;31m\002'
-# Reset
-Color_Off='\001\e[0m\002'
-# Color_Off='\[\e[0m\]'
-PS_Color_Off='\[\e[0m\]'
+_host_status () {
+  _with_color '0;38;5;220;48;5;166'
+  printf " $(hostname) "
+  _with_color '0;38;5;166;48;5;240;22'
+  printf ""
+}
 
-_sudo_status () {
-  sudo -n uptime 2>&1 | grep -q "load"
-  if [[ $? -eq 0 ]] ; then
-    echo -e "${Yellow}${On_Black}$sudo_icon"
+_path_status () {
+  is_sub_of_home="$(echo $PWD | grep $HOME | wc -l)"
+
+  if [ "${is_sub_of_home}" ];
+  then
+    IFS="/" read -ra PARTS <<< "${PWD/"$HOME"/"~"}"
+    PARTS[0]="~"
+  else
+    IFS="/" read -ra PARTS <<< "${PWD}"
+    PARTS[0]="/"
+  fi
+
+  _with_color '0;38;5;250;48;5;240'
+
+  if [ ${#PARTS[@]} -gt 3 ]; then
+    printf " ... "
+    _with_color '0;38;5;245;48;5;240;22'
+    printf ""
+    _with_color '0;38;5;250;48;5;240'
+
+    PARTS=("${PARTS[@]: -3}")
+  fi
+
+  length=${#PARTS[@]}
+  if [ "${length}" -gt 0 ];
+  then
+    for part in "${PARTS[@]::${length}-1}"
+    do
+      printf " ${part} "
+      _with_color '0;38;5;245;48;5;240;22'
+      printf ""
+      _with_color '0;38;5;250;48;5;240'
+    done
+
+    _with_color '0;38;5;252;48;5;240;1'
+    printf " ${PARTS[${length}-1]} "
+  fi
+
+  _with_color '0;38;5;240;48;5;236;22'
+  printf ""
+}
+
+_virtualenv_status () {
+  virtualenv=""
+
+  if [ "${VIRTUAL_ENV}" ];
+  then
+    IFS="/" read -ra PARTS <<< "${VIRTUAL_ENV}"
+    virtualenv="${PARTS[${#PARTS[@]}-1]}"
+  fi
+
+  if [ "${CONDA_DEFAULT_ENV}" ];
+  then
+    IFS="/" read -ra PARTS <<< "${CONDA_DEFAULT_ENV}"
+    virtualenv="${PARTS[${#PARTS[@]}-1]}"
+  fi
+
+  if [ "${virtualenv}" ];
+  then
+    _with_color '0;38;5;247;48;5;236'
+    printf " \xf0\x9f\x90\x8d ${virtualenv} "
   fi
 }
 
-_git_branch ()
+_git_status ()
 {
-  local gitbranch gitstatus modified
+  branch=$(git branch 2> /dev/null | grep '\*' | sed -e 's/* \(.*\)/\1/')
 
-  gitbranch=$(git branch 2> /dev/null | grep '\*' | sed -e 's/* \(.*\)/\1/')
-
-  if [ "$gitbranch" ] ; then
-    gitbranch=" ${gitbranch}"
-    gitstatus=$(git status -s)
-    modified="+$(git status -s | wc -l | sed -e 's/^[[:space:]]*//')"
-
-    if [ "$gitstatus" ] ; then
-      printf "${Grey}${On_Black} ${gitbranch} ${Red}${On_Black}${modified} ${Black}"
+  if [ "$branch" ] ; then
+    if [ "$(git status -s)" ];
+    then
+      _with_color '0;38;5;247;48;5;236'
     else
-      printf "${Green}${On_Black} ${gitbranch} ${Black}"
+      _with_color '0;38;5;2;48;5;236'
     fi
-  fi
-}
+    printf "  ${branch} "
 
-_git_colors () {
-  git_status=$(_git_branch)
+    staged=$(git diff --name-only --staged | wc -l | sed -e 's/^[[:space:]]*//')
+    if [ "${staged}" -gt 0 ] ; then
+      _with_color '0;38;5;2;48;5;236'
+      printf "● ${staged} "
+    fi
 
-  if [ "$git_status" ] ; then
-    if [[ "$(echo $git_status | grep -q + ; echo $?)" -eq 1 ]] ; then
-      printf "${On_Black}${git_status}"
-    else
-      printf "${On_Black}${git_status}"
+    modified="$(git diff --name-only | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${modified}" -gt 0 ] ; then
+      _with_color '0;38;5;166;48;5;236'
+      printf "✚ ${modified} "
+    fi
+
+    unknown="$(git status --porcelain | grep "^??" | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${unknown}" -gt 0 ] ; then
+      _with_color '0;38;5;214;48;5;236'
+      printf "… ${unknown} "
+    fi
+
+    stashed="$(git stash list | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${stashed}" -gt 0 ] ; then
+      _with_color '0;38;5;31;48;5;236'
+      printf "⚑ ${stashed} "
     fi
   fi
 }
 
 _create_prompt () {
-  user=$1
-  host=$2
-  cwd=$3
-  exit_code=$4
+  exit_code=$1
 
-  printf "${White}${On_Blue} ${user} "
-  if [ \$sudo_info = y ] ; then _sudo_status ; fi
-  printf "${Blue}${On_Yellow}"
+  _user_status
 
-  printf "${Black}${On_Yellow} ${host} ${Yellow}${On_Darkgrey}"
+  _host_status
 
-  IFS="/" read -ra PARTS <<< "${cwd}"
-  PARTS=("${PARTS[@]:1}")
-  if [ ${#PARTS[@]} -gt 3 ]; then
-    printf "${White}${On_Darkgrey} ... ${Darkgrey}"
-    PARTS=("${PARTS[@]: -3}")
+  _path_status
+
+  _virtualenv_status
+
+  _git_status
+
+  if [ "${exit_code}" = 0 ];
+  then
+    _with_color '0;38;5;236;49;22'
+    printf ""
   else
-    printf "${White}${On_Darkgrey} / ${Darkgrey}"
-  fi
-  for part in "${PARTS[@]}"
-  do
-    printf "${White}${On_Darkgrey}  ${part} ${Darkgrey}"
-  done
-
-  _git_colors
-
-  if [ $exit_code != 0 ]; then
-    printf "${On_Red}${White}${On_Red} ${exit_code} ${Red}"
+    _with_color '0;38;5;236;48;5;52;22'
+    printf ""
+    _with_color '0;38;5;231;48;5;52'
+    printf " ${exit_code} "
+    _with_color '0;38;5;52;49;22'
+    printf ""
   fi
 
-  printf "${Color_Off}"
+  printf '\n'
+
+  _with_color '0;38;5;252;48;5;240;1'
+  printf " $ "
+  _with_color '0;38;5;240;49;22'
+  printf ""
+
+  # switch off colors
+  _with_color '0'
+  printf ' '
 }
 
 if command -v pip &> /dev/null && command -v powerline-daemon &> /dev/null
@@ -138,6 +174,7 @@ then
     source "$POWERLINE_ROOT"/powerline/bindings/bash/powerline.sh
   fi
 else
-  # no powerline is detected -> use custom
-  PS1="\`_create_prompt \u \H \w \$?\`"
+  # no powerline is detected -> use custom prompt
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
+  PS1="\`_create_prompt \$?\`"
 fi
