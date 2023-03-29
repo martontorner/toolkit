@@ -26,6 +26,7 @@ bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bas
 
 ```bash
 curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requirements/powerline.txt | grep -vE '^#' | xargs pip3 install
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/configure/powerline.sh | grep -vE '^#')
 ```
 
 ## Create a figlet banner
