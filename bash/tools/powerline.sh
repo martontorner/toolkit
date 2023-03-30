@@ -91,7 +91,12 @@ _git_status ()
   branch=$(git branch 2> /dev/null | grep '\*' | sed -e 's/* \(.*\)/\1/')
 
   if [ "$branch" ] ; then
-    if [ "$(git status -s)" ];
+    status="$(git status -sb)"
+
+    branch_info="$(echo "${status}" | head -n 1)"
+    status="$(echo "${status}" | tail -n +2)"
+
+    if [ "${status}" ];
     then
       _with_color '0;38;5;247;48;5;236'
     else
@@ -99,26 +104,38 @@ _git_status ()
     fi
     printf "  ${branch} "
 
-    staged=$(git diff --name-only --staged | wc -l | sed -e 's/^[[:space:]]*//')
-    if [ "${staged}" -gt 0 ] ; then
+    behind="$(echo "${branch_info}" | sed -E 's/.*behind\ ([0-9]+).*/\1/' | sed -e 's/^##.*//')"
+    if [ ! -z "${behind}" ]; then
+      _with_color '0;38;5;252;48;5;236;1'
+      printf "↓ ${behind} "
+    fi
+
+    ahead="$(echo "${branch_info}" | sed -E 's/.*ahead\ ([0-9]+).*/\1/' | sed -e 's/^##.*//')"
+    if [ ! -z "${ahead}" ]; then
+      _with_color '0;38;5;252;48;5;236;1'
+      printf "↑ ${ahead} "
+    fi
+
+    staged="$(git diff --name-only --staged | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${staged}" -gt 0 ]; then
       _with_color '0;38;5;2;48;5;236'
       printf "● ${staged} "
     fi
 
     modified="$(git diff --name-only | wc -l | sed -e 's/^[[:space:]]*//')"
-    if [ "${modified}" -gt 0 ] ; then
+    if [ "${modified}" -gt 0 ]; then
       _with_color '0;38;5;166;48;5;236'
       printf "✚ ${modified} "
     fi
 
-    unknown="$(git status --porcelain | grep "^??" | wc -l | sed -e 's/^[[:space:]]*//')"
-    if [ "${unknown}" -gt 0 ] ; then
+    untracked="$(echo "${status}" | grep "^??" | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${untracked}" -gt 0 ]; then
       _with_color '0;38;5;214;48;5;236'
-      printf "… ${unknown} "
+      printf "… ${untracked} "
     fi
 
-    stashed="$(git stash list | wc -l | sed -e 's/^[[:space:]]*//')"
-    if [ "${stashed}" -gt 0 ] ; then
+    stashed="$(git stash list --no-decorate | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${stashed}" -gt 0 ]; then
       _with_color '0;38;5;31;48;5;236'
       printf "⚑ ${stashed} "
     fi
