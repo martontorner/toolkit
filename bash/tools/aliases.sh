@@ -37,7 +37,14 @@ alias dli='d images'
 alias dlg='d logs'
 alias dxc='d exec -it'
 
-alias c='docker compose'
+docker compose version &> /dev/null
+if [ $? -eq 0 ];
+then
+  alias c='docker compose'
+else
+  # fallback to old docker-compose
+  alias c='docker-compose'
+fi
 alias cup='c up -d'
 alias cwn='c down'
 
