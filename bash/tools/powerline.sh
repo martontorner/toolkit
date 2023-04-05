@@ -64,34 +64,12 @@ _path_status () {
   printf ""
 }
 
-_virtualenv_status () {
-  virtualenv=""
-
-  if [ "${VIRTUAL_ENV}" ];
-  then
-    IFS="/" read -ra PARTS <<< "${VIRTUAL_ENV}"
-    virtualenv="${PARTS[${#PARTS[@]}-1]}"
-  fi
-
-  if [ "${CONDA_DEFAULT_ENV}" ];
-  then
-    IFS="/" read -ra PARTS <<< "${CONDA_DEFAULT_ENV}"
-    virtualenv="${PARTS[${#PARTS[@]}-1]}"
-  fi
-
-  if [ "${virtualenv}" ];
-  then
-    _with_color '0;38;5;247;48;5;236'
-    printf " \xf0\x9f\x90\x8d ${virtualenv} "
-  fi
-}
-
 _git_status ()
 {
   branch=$(git branch 2> /dev/null | grep '\*' | sed -e 's/* \(.*\)/\1/')
 
   if [ "$branch" ] ; then
-    status="$(git status -sb)"
+    status="$(git status --branch --porcelain)"
 
     branch_info="$(echo "${status}" | head -n 1)"
     status="$(echo "${status}" | tail -n +2)"
@@ -106,23 +84,29 @@ _git_status ()
 
     behind="$(echo "${branch_info}" | sed -E 's/.*behind\ ([0-9]+).*/\1/' | sed -e 's/^##.*//')"
     if [ ! -z "${behind}" ]; then
-      _with_color '0;38;5;252;48;5;236;1'
+      _with_color '0;38;5;252;48;5;236'
       printf "↓ ${behind} "
     fi
 
     ahead="$(echo "${branch_info}" | sed -E 's/.*ahead\ ([0-9]+).*/\1/' | sed -e 's/^##.*//')"
     if [ ! -z "${ahead}" ]; then
-      _with_color '0;38;5;252;48;5;236;1'
+      _with_color '0;38;5;252;48;5;236'
       printf "↑ ${ahead} "
     fi
 
-    staged="$(git diff --name-only --staged | wc -l | sed -e 's/^[[:space:]]*//')"
+    staged="$(echo "${status}" | grep -E "^([MRC].|[D][^D]|[A][^A])" | wc -l | sed -e 's/^[[:space:]]*//')"
     if [ "${staged}" -gt 0 ]; then
       _with_color '0;38;5;2;48;5;236'
       printf "● ${staged} "
     fi
 
-    modified="$(git diff --name-only | wc -l | sed -e 's/^[[:space:]]*//')"
+    unmerged="$(echo "${status}" | grep -E "^([U].|.[U]|[A][A]|[D][D])" | wc -l | sed -e 's/^[[:space:]]*//')"
+    if [ "${unmerged}" -gt 0 ]; then
+      _with_color '0;38;5;2;48;5;236'
+      printf "✖ ${unmerged} "
+    fi
+
+    modified="$(echo "${status}" | grep -E "^(.[M]|[^D][D])" | wc -l | sed -e 's/^[[:space:]]*//')"
     if [ "${modified}" -gt 0 ]; then
       _with_color '0;38;5;166;48;5;236'
       printf "✚ ${modified} "
@@ -142,6 +126,28 @@ _git_status ()
   fi
 }
 
+_virtualenv_status () {
+  virtualenv=""
+
+  if [ "${VIRTUAL_ENV}" ];
+  then
+    IFS="/" read -ra PARTS <<< "${VIRTUAL_ENV}"
+    virtualenv="${PARTS[${#PARTS[@]}-1]}"
+  fi
+
+  if [ "${CONDA_DEFAULT_ENV}" ];
+  then
+    IFS="/" read -ra PARTS <<< "${CONDA_DEFAULT_ENV}"
+    virtualenv="${PARTS[${#PARTS[@]}-1]}"
+  fi
+
+  if [ "${virtualenv}" ];
+  then
+    _with_color '0;38;5;252;48;5;240'
+    printf " \xf0\x9f\x90\x8d ${virtualenv}"
+  fi
+}
+
 _create_prompt () {
   exit_code=$1
 
@@ -150,8 +156,6 @@ _create_prompt () {
   _host_status
 
   _path_status
-
-  _virtualenv_status
 
   _git_status
 
@@ -170,8 +174,11 @@ _create_prompt () {
 
   printf '\n'
 
+  _virtualenv_status
+
   _with_color '0;38;5;252;48;5;240;1'
   printf " $ "
+
   _with_color '0;38;5;240;49;22'
   printf ""
 
