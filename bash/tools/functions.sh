@@ -64,35 +64,38 @@ Precision is counted from seconds (so 9 means nanosecond precision).
 # Enter a docker container bash
 function docker_exec_bash () {
   if [ -z "$1" ]; then
-    echo "github_clone_own: Clone a git repo from my own account by name
+    echo "docker_exec_bash: Enter a docker container bash
 
-Usage: github_clone_own <name>
+Usage: docker_exec_bash <name>
 "
 
     return;
   fi
 
-  dxc $1 /bin/bash
+  docker exec -it $1 /bin/bash
 }
 alias dxcb='docker_exec_bash'
 
 
-# Clone a git repo from my own account by name
-function github_clone_own () {
-  if [ -z "$1" ]; then
-    echo "github_clone_own: Clone a git repo from my own account by name
+# Clone a github repo by account and by name
+function github_clone () {
+  if [ -z "$2" ]; then
+    echo "github_clone: Clone a github repo by account and by name
 
-Usage: github_clone_own <name>
+Usage: github_clone_own <account> <name>
 "
 
     return;
   fi
 
-  name=$1
+  account=$1
+  name=$2
 
-  git clone "git@github.com:tornermarton/${name}.git"
+  git clone "git@github.com:${account}/${name}.git"
 }
-alias ghco='github_clone_own'
+alias ghc='github_clone'
+# Clone own repo
+alias ghco='github_clone tornermarton'
 
 
 # Update installed toolkit
