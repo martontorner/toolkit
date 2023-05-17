@@ -2,7 +2,6 @@ alias ll='ls -lahvF --color=auto'
 alias tree='tree -C --dirsfirst'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias p='cd ~/git/'
 
 alias h='history | tail -n 50'
 
