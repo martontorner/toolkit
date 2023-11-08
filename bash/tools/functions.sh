@@ -1,6 +1,6 @@
 set -e
 
-# Print ASCII table (decimal (d), octal (o), hex (h)) - works only for MAC
+# Change to repo in ~/git/ directory
 function cd_repo () {
   if [ -z "$1" ]; then
     echo "cd_repo: Change to repo in ~/git/ directory
@@ -60,6 +60,56 @@ Precision is counted from seconds (so 9 means nanosecond precision).
   python3 -c "import datetime;print(datetime.datetime.fromtimestamp($e / 1e$p).isoformat())"
 }
 
+function random_password_generator () {
+  if [ -z "$1" ]; then
+    echo "random_password_generator: Create a random password
+
+Usage: random_password_generator <length> [<use_special_characters = 0>]
+"
+
+    return;
+  fi
+
+  length=$1
+  use_special_characters=$2
+
+  if [ -z "$use_special_characters" ]; then
+    use_special_characters=0
+  fi
+
+  if [ $use_special_characters -eq 1 ]; then
+    CHARS=( \
+      a b c d e f g h i j k l m n o p q r s t u v w x y z \
+      A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+      0 1 2 3 4 5 6 7 8 9 \
+      \; \: \. \~ \! \@ \# \$ \% \^ \& \* - + = \? \
+    )
+  else
+    CHARS=( \
+      a b c d e f g h i j k l m n o p q r s t u v w x y z \
+      A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+      0 1 2 3 4 5 6 7 8 9 \
+    )
+  fi
+
+  CNUM="${#CHARS[@]}"
+
+  result=""
+
+  let POSCNT=0;
+  while [ 1 -eq 1 ]; do
+    if [ $POSCNT -ge $length ]; then
+      break;
+    fi
+
+    result="${result}${CHARS[${RANDOM}%${CNUM}]}"
+
+    let POSCNT=$POSCNT+1
+  done
+
+  echo "${result}"
+}
+alias rpwdgen='random_password_generator'
 
 # Enter a docker container bash
 function docker_exec_bash () {
