@@ -148,6 +148,29 @@ alias ghc='github_clone'
 alias ghco='github_clone tornermarton'
 
 
+# Deploy toolkit over ssh to a remote host
+function deploy_toolkit () {
+  if [ -z "$2" ]; then
+    echo "deploy_toolkit: Deploy toolkit over ssh to a remote host
+
+Usage: deploy_toolkit <target> [<path>]
+"
+
+    return;
+  fi
+
+  target=$1
+  path=$2
+
+  if [ -z "$2" ]; then
+    path="${HOME}/.toolkitrc"
+    echo "Using default path: ${path}"
+  fi
+
+  scp "${path}" "${host}:${path}"
+}
+
+
 # Update installed toolkit
 function update_toolkit () {
   path=$1
