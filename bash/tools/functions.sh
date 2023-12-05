@@ -180,7 +180,16 @@ function update_toolkit () {
     echo "Using default path: ${path}"
   fi
 
-  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > "${path}"
+  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > "${path}.tmp"
+
+  if [ -z "$(cat ${path}.tmp)" ]; then
+    echo "ERROR: New tookit is empty, prevent overwrite"
+    rm "${path}.tmp"
+    return 1;
+  fi
+
+  mv "${path}.tmp" "${path}"
+
 }
 
 set +e
