@@ -41,6 +41,8 @@ alias d='docker'
 alias dls='d ps --no-trunc --format="table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Ports}}" | (read -r; printf "%s\n" "$REPLY"; sort -k 1)'
 alias dla='d ps -a --no-trunc --format="table {{.Names}}\t{{.Status}}\t{{.RunningFor}}\t{{.Size}}\t{{.Image}}\t{{.Command}}\t{{.Ports}}" | (read -r; printf "%s\n" "$REPLY"; sort -k 1)'
 alias dli='d images'
+alias dlv='d volume ls'
+alias dln='d network ls'
 alias dlg='d logs'
 alias dxc='d exec -it'
 
