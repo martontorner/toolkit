@@ -189,6 +189,8 @@ function update_toolkit () {
   fi
 
   mv "${toolkit_path}.tmp" "${toolkit_path}"
+
+  source "${toolkit_path}"
 }
 
 set +e
