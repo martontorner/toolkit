@@ -1,5 +1,6 @@
 echo '#----------------------------- VARIABLES --------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/variables.sh)
+cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/variables.sh)
 echo '#------------------------------ ALIASES ---------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/aliases.sh)
 echo '#----------------------------- FUNCTIONS --------------------------------'
