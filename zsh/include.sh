@@ -11,5 +11,7 @@ DIR="$( cd "$( dirname "${(%):-%x}" )" && pwd )"
 . "$DIR"/../shell/tools/tmux.sh
 #------------------------------ BANNER ----------------------------------
 . "$DIR"/../shell/tools/banner.sh
+#---------------------------- COMPLETIONS -------------------------------
+. "$DIR"/tools/completions.sh
 #------------------------------ PROMPT ----------------------------------
 . "$DIR"/tools/prompt.sh

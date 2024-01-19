@@ -1,4 +1,4 @@
-alias ll='ls -lahvF --color=always'
+alias ll='ls -l -a -h -v -F --color=always'
 alias tree='tree -C --dirsfirst'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -48,7 +48,7 @@ alias dli='d image ls'
 alias dlv='d volume ls'
 alias dln='d network ls'
 alias dlg='d logs'
-alias dxc='d exec -it'
+alias dxc='d exec -i -t'
 
 docker compose version &> /dev/null
 if [ $? -eq 0 ];
