@@ -160,36 +160,35 @@ Usage: deploy_toolkit <target> [<path>]
   fi
 
   target=$1
-  path=$2
+  toolkit_path=$2
 
   if [ -z "$2" ]; then
-    path="${HOME}/.toolkitrc"
-    echo "Using default path: ${path}"
+    toolkit_path="${HOME}/.toolkitrc"
+    echo "Using default path: ${toolkit_path}"
   fi
 
-  scp "${path}" "${target}:${path}"
+  scp "${toolkit_path}" "${target}:${toolkit_path}"
 }
 
 
 # Update installed toolkit
 function update_toolkit () {
-  path=$1
+  toolkit_path=$1
 
   if [ -z "$1" ]; then
-    path="${HOME}/.toolkitrc"
-    echo "Using default path: ${path}"
+    toolkit_path="${HOME}/.toolkitrc"
+    echo "Using default path: ${toolkit_path}"
   fi
 
-  curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/${SHELL_TOOLKIT}/install.sh > "${path}.tmp"
+  source <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/${SHELL_TOOLKIT}/install.sh) > "${toolkit_path}.tmp"
 
-  if [ -z "$(cat ${path}.tmp)" ]; then
+  if [ -z "$(cat ${toolkit_path}.tmp)" ]; then
     echo "ERROR: New tookit file is empty, prevent overwrite"
-    rm "${path}.tmp"
+    rm "${toolkit_path}.tmp"
     return 1;
   fi
 
-  mv "${path}.tmp" "${path}"
-
+  mv "${toolkit_path}.tmp" "${toolkit_path}"
 }
 
 set +e
