@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 git config --global user.name "Márton Torner"
 git config --global user.email torner.marton@gmail.com
 

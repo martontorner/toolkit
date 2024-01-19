@@ -150,7 +150,7 @@ alias ghco='github_clone tornermarton'
 
 # Deploy toolkit over ssh to a remote host
 function deploy_toolkit () {
-  if [ -z "$2" ]; then
+  if [ -z "$1" ]; then
     echo "deploy_toolkit: Deploy toolkit over ssh to a remote host
 
 Usage: deploy_toolkit <target> [<path>]
@@ -167,7 +167,7 @@ Usage: deploy_toolkit <target> [<path>]
     echo "Using default path: ${path}"
   fi
 
-  scp "${path}" "${host}:${path}"
+  scp "${path}" "${target}:${path}"
 }
 
 
@@ -180,7 +180,7 @@ function update_toolkit () {
     echo "Using default path: ${path}"
   fi
 
-  bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > "${path}.tmp"
+  curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh > "${path}.tmp"
 
   if [ -z "$(cat ${path}.tmp)" ]; then
     echo "ERROR: New tookit is empty, prevent overwrite"

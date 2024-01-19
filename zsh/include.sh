@@ -1,4 +1,4 @@
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${(%):-%x}" )" && pwd )"
 
 . "$DIR"/../shell/tools/variables.sh
 . "$DIR"/../shell/tools/aliases.sh
@@ -6,6 +6,3 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . "$DIR"/../shell/tools/tmux.sh
 
 . "$DIR"/../shell/tools/banner.sh
-
-. "$DIR"/tools/autocomplete.sh
-. "$DIR"/tools/powerline.sh

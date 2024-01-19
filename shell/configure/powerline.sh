@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 mkdir -p "${HOME}/.config/powerline"
 cat > "${HOME}/.config/powerline/config.json" <<- EOM
 {

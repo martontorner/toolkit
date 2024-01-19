@@ -9,8 +9,3 @@ cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shel
 
 echo '#------------------------------ BANNER ----------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/banner.sh)
-
-echo '#---------------------------- AUTOCOMPLETE ------------------------------'
-cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/autocomplete.sh)
-echo '#----------------------------- POWERLINE --------------------------------'
-cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/powerline.sh)
