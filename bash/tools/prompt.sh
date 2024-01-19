@@ -29,7 +29,7 @@ _path_status () {
     IFS="/" read -ra PARTS <<< "${PWD}"
     PARTS[0]="/"
   else
-    IFS="/" read -ra PARTS <<< "${PWD/$HOME/~}"
+    IFS="/" read -ra PARTS <<< "${PWD/"$HOME"/~}"
   fi
 
   _with_color '0;38;5;250;48;5;240'
