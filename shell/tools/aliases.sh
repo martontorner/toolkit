@@ -1,4 +1,4 @@
-alias ll='ls -lahvF --color=auto'
+alias ll='ls -lahvF --color=always'
 alias tree='tree -C --dirsfirst'
 alias ..='cd ..'
 alias ...='cd ../..'

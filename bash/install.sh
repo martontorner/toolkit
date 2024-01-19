@@ -12,5 +12,5 @@ cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shel
 
 echo '#---------------------------- AUTOCOMPLETE ------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/autocomplete.sh)
-echo '#----------------------------- POWERLINE --------------------------------'
-cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/powerline.sh)
+echo '#----------------------------- PROMPT --------------------------------'
+cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/prompt.sh)

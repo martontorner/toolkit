@@ -180,10 +180,10 @@ function update_toolkit () {
     echo "Using default path: ${path}"
   fi
 
-  curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh > "${path}.tmp"
+  curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/${SHELL_TOOLKIT}/install.sh > "${path}.tmp"
 
   if [ -z "$(cat ${path}.tmp)" ]; then
-    echo "ERROR: New tookit is empty, prevent overwrite"
+    echo "ERROR: New tookit file is empty, prevent overwrite"
     rm "${path}.tmp"
     return 1;
   fi
