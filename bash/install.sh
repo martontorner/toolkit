@@ -6,11 +6,9 @@ echo '#----------------------------- FUNCTIONS --------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/functions.sh)
 echo '#------------------------------- TMUX -----------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/tmux.sh)
-
 echo '#------------------------------ BANNER ----------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/tools/banner.sh)
-
 echo '#---------------------------- AUTOCOMPLETE ------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/autocomplete.sh)
-echo '#----------------------------- PROMPT --------------------------------'
+echo '#------------------------------ PROMPT ----------------------------------'
 cat <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/tools/prompt.sh)
