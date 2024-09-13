@@ -62,6 +62,23 @@ fi
 alias cup='c up -d'
 alias cwn='c down'
 
+alias k='kubectl'
+alias kc='k config'
+alias kns='kc set-context --current --namespace'
+alias klg='k logs'
+alias kg='k get'
+alias kgp='kg pods'
+alias kgd='kg deployments'
+alias kgs='kg services'
+alias kgi='kg ingresses'
+alias kgn='kg namespaces'
+alias kd='k describe'
+alias kdp='kd pod'
+alias kdd='kd deployment'
+alias kds='kd service'
+alias kdi='kd ingress'
+alias kdn='kd namespace'
+
 alias utcnow='date -u "+%Y-%m-%dT%H:%M:%SZ"'
 alias epochnow='python3 -c "import time;print(time.time_ns())"'
 
