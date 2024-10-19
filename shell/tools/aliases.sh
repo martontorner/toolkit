@@ -35,8 +35,10 @@ alias ghs='gh -n 20'
 alias v='vim'
 alias grep='grep --color=auto'
 
-alias nb='jupyter notebook'
-alias a='. venv/bin/activate || . venv/Scripts/activate'
+alias a='. .venv/bin/activate || . .venv/Scripts/activate || . venv/bin/activate || . venv/Scripts/activate'
+alias j='jupyter'
+alias jlb='j lab'
+alias jnb='j notebook'
 
 alias hostfile='sudo vim /etc/hosts'
 alias gip='curl https://api.ipify.org ; echo'
@@ -51,8 +53,7 @@ alias dln='d network ls'
 alias dlg='d logs'
 alias dxc='d exec -i -t'
 
-docker compose version &> /dev/null
-if [ $? -eq 0 ];
+if docker compose version > /dev/null 2>&1;
 then
   alias c='docker compose'
 else
