@@ -1,5 +1,5 @@
-git config --global user.name "Márton Torner"
-git config --global user.email torner.marton@gmail.com
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
 
 git config --global core.editor vim
 
