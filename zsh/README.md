@@ -8,7 +8,7 @@ curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/requ
 ## Install toolkit
 
 ```bash
-zsh <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/install.sh) > ~/.toolkitrc
+zsh <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/zsh/install.sh) > ~/.toolkitrc
 ```
 
 ```bash
@@ -31,12 +31,12 @@ git config --global user.signingkey <ID>
 
 Update common configs
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/configure/git.sh | grep -vE '^#')
+bash <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/configure/git.sh | grep -vE '^#')
 ```
 
 ## Install Powerline
 
 ```bash
-curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/requirements/powerline.txt | grep -vE '^#' | xargs pip3 install
-zsh <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/bash/configure/powerline.sh | grep -vE '^#')
+curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/requirements/powerline.txt | grep -vE '^#' | xargs pip3 install
+zsh <(curl -s https://raw.githubusercontent.com/tornermarton/toolkit/master/shell/configure/powerline.sh | grep -vE '^#')
 ```
