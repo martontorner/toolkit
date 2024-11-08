@@ -35,7 +35,7 @@ alias ghs='gh -n 20'
 alias v='vim'
 alias grep='grep --color=auto'
 
-alias a='. .venv/bin/activate || . .venv/Scripts/activate || . venv/bin/activate || . venv/Scripts/activate'
+alias a='. .venv/bin/activate > /dev/null 2>&1 || . .venv/Scripts/activate > /dev/null 2>&1 || . venv/bin/activate > /dev/null 2>&1 || . venv/Scripts/activate > /dev/null 2>&1'
 alias j='jupyter'
 alias jlb='j lab'
 alias jnb='j notebook'
