@@ -5,7 +5,7 @@
 _with_color () {
   color=$1
 
-  echo "%{\001\e[${color}m\002%}"
+  echo "%{\e[${color}m%}"
 }
 
 _with_print () {
