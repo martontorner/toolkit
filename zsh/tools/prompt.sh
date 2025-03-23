@@ -14,22 +14,42 @@ _with_print () {
   echo "${info}"
 }
 
-_user_status () {
+_prompt_length() {
+  emulate -L zsh
+  local COLUMNS=${2:-$COLUMNS}
+  local -i x y=$#1 m
+  if (( y )); then
+    while (( ${${(%):-$1%$y(l.1.0)}[-1]} )); do
+      x=y
+      (( y *= 2 ));
+    done
+    local xy
+    while (( y > x + 1 )); do
+      m=$(( x + (y - x) / 2 ))
+      typeset ${${(%):-$1%$m(l.x.y)}[-1]}=$m
+    done
+  fi
+  echo $x
+}
+
+_host_status () {
   line=""
-  
-  line="${line}$(_with_color "0;38;5;231;48;5;31;1")"
-  line="${line}$(_with_print " $(whoami) ")"
+
+  line="${line}$(_with_color "0;38;5;31;48;5;256;22")"
+  line="${line}$(_with_print "")"
+  line="${line}$(_with_color "0;38;5;231;48;5;31")"
+  line="${line}$(_with_print " $(hostname) ")"
   line="${line}$(_with_color "0;38;5;31;48;5;166;22")"
   line="${line}$(_with_print "")"
   
   echo "${line}"
 }
 
-_host_status () {
+_user_status () {
   line=""
   
-  line="${line}$(_with_color "0;38;5;220;48;5;166")"
-  line="${line}$(_with_print " $(hostname) ")"
+  line="${line}$(_with_color "0;38;5;229;48;5;166")"
+  line="${line}$(_with_print "  $(whoami) ")"
   line="${line}$(_with_color "0;38;5;166;48;5;240;22")"
   line="${line}$(_with_print "")"
   
@@ -139,48 +159,18 @@ _git_status () {
       line="${line}$(_with_color "0;38;5;31;48;5;236")"
       line="${line}$(_with_print "⚑ ${stashed} ")"
     fi
+
+    line="${line}$(_with_color "0;38;5;236;48;5;240;22")"
+    line="${line}$(_with_print "")"
   fi
 
   echo "${line}"
 }
 
-_virtualenv_status () {
-  line=""
-
-  virtualenv=""
-
-  if [ "${VIRTUAL_ENV}" ]; then
-    STR="${VIRTUAL_ENV}"
-    PARTS=(${(@s:/:)STR})
-    virtualenv="${PARTS[${#PARTS[@]}-1]}"
-  fi
-
-  if [ "${CONDA_DEFAULT_ENV}" ]; then
-    STR="${CONDA_DEFAULT_ENV}"
-    PARTS=(${(@s:/:)STR})
-    virtualenv="${PARTS[${#PARTS[@]}-1]}"
-  fi
-
-  if [ "${virtualenv}" ]; then
-    line="${line}$(_with_color "0;38;5;250;48;5;240")"
-    line="${line}$(_with_print " \xf0\x9f\x90\x8d ${virtualenv}")"
-  fi
-
-  echo "${line}"
-}
-
-_create_prompt () {
+_left_status () {
   line=""
 
   exit_code=$1
-
-  line="${line}$(_user_status)"
-
-  line="${line}$(_host_status)"
-
-  line="${line}$(_path_status)"
-
-  line="${line}$(_git_status)"
 
   if [ "${exit_code}" -gt 0 ]; then
     line="${line}$(_with_color "0;38;5;240;48;5;52;22")"
@@ -194,19 +184,102 @@ _create_prompt () {
     line="${line}$(_with_print "")"
   fi
 
-  line="${line}\n"
+  echo "${line}"
+}
 
-  line="${line}$(_virtualenv_status)"
+_runtime_status () {
+  line=""
 
-  line="${line}$(_with_color "0;38;5;250;48;5;240;1")"
-  line="${line}$(_with_print " $ ")"
+  has_version=0
+
+  python3_version=$(python3 -V 2> /dev/null)
+  python_version=$(python -V 2> /dev/null)
+
+  node_version=$(node -v 2> /dev/null)
+
+  if [ "$python3_version" ]; then
+    has_version=1
+
+    line="${line}$(_with_color "0;38;5;75;48;5;236")"
+    line="${line}$(_with_print " ")"
+    line="${line}$(_with_color "0;38;5;247;48;5;236")"
+    line="${line}$(_with_print " ${python3_version/Python /} ")"
+  elif [ "$python_version" ]; then
+    has_version=1
+
+    line="${line}$(_with_color "0;38;5;75;48;5;236")"
+    line="${line}$(_with_print " ")"
+    line="${line}$(_with_color "0;38;5;247;48;5;236")"
+    line="${line}$(_with_print " ${python_version/Python /} ")"
+  fi
+
+  if [ "$node_version" ]; then
+    if [ $has_version ]; then
+      line="${line}$(_with_color "0;38;5;247;48;5;236")"
+      line="${line}$(_with_print "")"
+    fi
+
+    has_version=1
+
+    line="${line}$(_with_color "0;38;5;2;48;5;236")"
+    line="${line}$(_with_print " ")"
+    line="${line}$(_with_color "0;38;5;247;48;5;236")"
+    line="${line}$(_with_print " ${node_version/v/} ")"
+  fi
+
+  if [ $has_version ]; then
+    line="$(_with_print "")${line}"
+    line="$(_with_color "0;38;5;236;48;5;240;22")${line}"
+
+    line="${line}$(_with_color "0;38;5;240;48;5;236;22")"
+    line="${line}$(_with_print "")"
+  fi
+
+  echo "${line}"
+}
+
+_right_status () {
+  line=""
 
   line="${line}$(_with_color "0;38;5;240;48;5;256;22")"
-  line="${line}$(_with_print "")"
+  line="${line}$(_with_print "")"
+
+  echo "${line}"
+}
+
+_time_status () {
+  line=""
+  line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
+  line="${line}$(_with_print " $(date +'%I:%M %p')  ")"
+
+  line="${line}$(_with_color "0;38;5;240;48;5;256;22")"
+  line="${line}$(_with_print "")"
+
+  echo "${line}"
+}
+
+_create_prompt () {
+  l_line=""
+  l_line="${l_line}$(_host_status)"
+  l_line="${l_line}$(_user_status)"
+  l_line="${l_line}$(_path_status)"
+  l_line="${l_line}$(_git_status)"
+  l_line="${l_line}$(_left_status $1)"
+
+  r_line=""
+  r_line="${r_line}$(_right_status)"
+  r_line="${r_line}$(_runtime_status)"
+  r_line="${r_line}$(_time_status)"
+
+  l_len=$(_prompt_length $l_line)
+  r_len=$(_prompt_length $r_line)
+  padding_size=$((COLUMNS - l_len - r_len))
+
+  line="${l_line}${(pl.$padding_size.. .)}${r_line}\n"
 
   # switch off colors
   line="${line}$(_with_color "0")"
-  line="${line}$(_with_print " ")"
+  line="${line}$(_with_print " $ ")"
 
   echo "${line}"
 }
