@@ -1,3 +1,6 @@
+[ -x "$(command -v docker)" ] && source <(docker completion zsh)
+[ -x "$(command -v kubectl)" ] && source <(kubectl completion zsh)
+
 _cd_repo() { _files -W ~/git; }
 compdef _cd_repo cd_repo
 
