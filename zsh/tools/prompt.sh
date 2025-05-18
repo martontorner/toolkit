@@ -275,10 +275,11 @@ _create_prompt () {
   r_len=$(_prompt_length $r_line)
   padding_size=$((COLUMNS - l_len - r_len))
 
-  line="${l_line}${(pl.$padding_size.. .)}${r_line}\n"
+  line="${l_line}${(pl.$padding_size.. .)}${r_line}"
 
   # switch off colors
   line="${line}$(_with_color "0")"
+  line="${line}\n"
   line="${line}$(_with_print " $ ")"
 
   echo "${line}"

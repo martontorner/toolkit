@@ -5,7 +5,7 @@
 _with_color () {
   color=$1
 
-  echo "\001\e[${color}m\002"
+  echo "\[\e[${color}m\]"
 }
 
 _with_print () {
@@ -244,11 +244,20 @@ _create_prompt () {
   l_line="${l_line}$(_git_status)"
   l_line="${l_line}$(_left_status $1)"
 
-  # TODO: r_line
-  line="${l_line}\n"
+  r_line=""
+  r_line="${r_line}$(_right_status)"
+  r_line="${r_line}$(_runtime_status)"
+  r_line="${r_line}$(_time_status)"
+
+  l_len=$(echo -e "$l_line" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; })
+  r_len=$(echo -e "$r_line" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; })
+  padding_size=$((COLUMNS - l_len - r_len))
+
+  line="${l_line}$(printf '%*s' "$padding_size" '')${r_line}"
 
   # switch off colors
   line="${line}$(_with_color "0")"
+  line="${line}\n"
   line="${line}$(_with_print " $ ")"
 
   echo "${line}"
