@@ -17,7 +17,7 @@ _with_print () {
 _host_status () {
   line=""
 
-  line="${line}$(_with_color "0;38;5;31;48;5;256;22")"
+  line="${line}$(_with_color "0;38;5;31;48;49;22")"
   line="${line}$(_with_print "")"
   line="${line}$(_with_color "0;38;5;231;48;5;31")"
   line="${line}$(_with_print " $(hostname) ")"
@@ -155,10 +155,10 @@ _left_status () {
     line="${line}$(_with_print "")"
     line="${line}$(_with_color "0;38;5;231;48;5;52")"
     line="${line}$(_with_print " ${exit_code} ")"
-    line="${line}$(_with_color "0;38;5;52;48;5;256;22")"
+    line="${line}$(_with_color "0;38;5;52;48;49;22")"
     line="${line}$(_with_print "")"
   else
-    line="${line}$(_with_color "0;38;5;240;48;5;256;22")"
+    line="${line}$(_with_color "0;38;5;240;48;49;22")"
     line="${line}$(_with_print "")"
   fi
 
@@ -219,7 +219,7 @@ _runtime_status () {
 _right_status () {
   line=""
 
-  line="${line}$(_with_color "0;38;5;240;48;5;256;22")"
+  line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
 
   echo "${line}"
@@ -230,7 +230,7 @@ _time_status () {
   line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
   line="${line}$(_with_print " $(date +'%I:%M %p')  ")"
 
-  line="${line}$(_with_color "0;38;5;240;48;5;256;22")"
+  line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
 
   echo "${line}"
