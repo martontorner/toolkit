@@ -14,6 +14,18 @@ _with_print () {
   echo "${info}"
 }
 
+_prompt_length () {
+  echo -e "$1" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; }
+}
+
+_with_padding() {
+  l_len=$(_prompt_length "$1")
+  r_len=$(_prompt_length "$2")
+  padding_size=$((COLUMNS - l_len - r_len))
+
+  echo "$(printf '%*s' "$padding_size" '')"
+}
+
 _host_status () {
   line=""
 
@@ -175,6 +187,8 @@ _runtime_status () {
 
   node_version=$(node -v 2> /dev/null)
 
+  go_version=$(go version 2> /dev/null | awk '{print $3}')
+
   if [ "$python3_version" ]; then
     has_version=1
 
@@ -203,6 +217,20 @@ _runtime_status () {
     line="${line}$(_with_print " ")"
     line="${line}$(_with_color "0;38;5;247;48;5;236")"
     line="${line}$(_with_print " ${node_version/v/} ")"
+  fi
+
+  if [ "$go_version" ]; then
+    if [ $has_version ]; then
+      line="${line}$(_with_color "0;38;5;247;48;5;236")"
+      line="${line}$(_with_print "")"
+    fi
+
+    has_version=1
+
+    line="${line}$(_with_color "0;38;5;39;48;5;236")"
+    line="${line}$(_with_print " 󰟓 ")"
+    line="${line}$(_with_color "0;38;5;247;48;5;236")"
+    line="${line}$(_with_print " ${go_version/go/} ")"
   fi
 
   if [ $has_version ]; then
@@ -249,11 +277,7 @@ _create_prompt () {
   r_line="${r_line}$(_runtime_status)"
   r_line="${r_line}$(_time_status)"
 
-  l_len=$(echo -e "$l_line" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; })
-  r_len=$(echo -e "$r_line" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; })
-  padding_size=$((COLUMNS - l_len - r_len))
-
-  line="${l_line}$(printf '%*s' "$padding_size" '')${r_line}"
+  line="${l_line}$(_with_padding "${l_line}" "${r_line}")${r_line}"
 
   # switch off colors
   line="${line}$(_with_color "0")"
