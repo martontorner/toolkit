@@ -2,6 +2,12 @@
 ## A simplified shell-only powerline-like prompt
 #
 
+# --- HELPERS --- #
+
+__prompt_length () {
+  echo -e "$1" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; }
+}
+
 _with_color () {
   color=$1
 
@@ -14,17 +20,28 @@ _with_print () {
   echo "${info}"
 }
 
-_prompt_length () {
-  echo -e "$1" | sed -r 's/\\\[[^]]*\\\]//g' | { read -r s; echo "${#s}"; }
+_with_merge() {
+  line_s=$1
+  line_e=$2
+
+  line_s_length=$(__prompt_length "${line_s}")
+  line_e_length=$(__prompt_length "${line_e}")
+  line_c_length=$((COLUMNS - line_s_length - line_e_length))
+
+  line_c="$(printf '%*s' "$line_c_length" '')"
+
+  echo "${line_s}${line_c}${line_e}"
 }
 
-_with_padding() {
-  l_len=$(_prompt_length "$1")
-  r_len=$(_prompt_length "$2")
-  padding_size=$((COLUMNS - l_len - r_len))
-
-  echo "$(printf '%*s' "$padding_size" '')"
+_set_options () {
+  :
 }
+
+_unset_options () {
+  :
+}
+
+# --- HELPERS --- #
 
 _host_status () {
   line=""
@@ -103,7 +120,7 @@ _path_status () {
   echo "${line}"
 }
 
-_git_status () {
+_repo_status () {
   line=""
 
   branch=$(git branch 2> /dev/null | grep "\*" | sed -e "s/* \(.*\)/\1/")
@@ -173,7 +190,7 @@ _git_status () {
   echo "${line}"
 }
 
-_left_status () {
+_exit_status () {
   line=""
 
   exit_code=$1
@@ -193,7 +210,30 @@ _left_status () {
   echo "${line}"
 }
 
-_runtime_status () {
+_kube_status () {
+  line=""
+
+  line="${line}$(_with_color "0;38;5;240;48;49;22")"
+  line="${line}$(_with_print "")"
+
+  docker=$(docker version 2> /dev/null)
+
+  if [ "${docker}" ]; then
+    line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
+    line="${line}$(_with_print "   ")"
+  fi
+
+  context=$(kubectl config current-context 2> /dev/null)
+
+  if [ "${context}" ]; then
+    line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
+    line="${line}$(_with_print "${context} ")"
+  fi
+
+  echo "${line}"
+}
+
+_tool_status () {
   line=""
 
   has_version=0
@@ -260,59 +300,65 @@ _runtime_status () {
   echo "${line}"
 }
 
-_right_status () {
-  line=""
-
-  line="${line}$(_with_color "0;38;5;240;48;49;22")"
-  line="${line}$(_with_print "")"
-
-  echo "${line}"
-}
-
 _time_status () {
   line=""
+
   line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
   line="${line}$(_with_print " $(date +'%I:%M %p')  ")"
 
   line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
+  line="${line}$(_with_color "0")"
 
   echo "${line}"
 }
 
-_create_prompt () {
+_create_status_line () {
   l_line=""
+  r_line=""
+
   l_line="${l_line}$(_host_status)"
   l_line="${l_line}$(_user_status)"
   l_line="${l_line}$(_path_status)"
-  l_line="${l_line}$(_git_status)"
-  l_line="${l_line}$(_left_status $1)"
+  l_line="${l_line}$(_repo_status)"
+  l_line="${l_line}$(_exit_status $1)"
 
-  r_line=""
-  r_line="${r_line}$(_right_status)"
-  r_line="${r_line}$(_runtime_status)"
+  r_line="${r_line}$(_kube_status)"
+  r_line="${r_line}$(_tool_status)"
   r_line="${r_line}$(_time_status)"
 
-  line="${l_line}$(_with_padding "${l_line}" "${r_line}")${r_line}"
+  echo "$(_with_merge "${l_line}" "${r_line}")"
+}
 
-  # switch off colors
-  line="${line}$(_with_color "0")"
+_create_prompt_line () {
+  echo "$(_with_print " $ ")"
+}
+
+_create_prompt () {
+  line=""
+
+  _set_options
+
+  line="${line}$(_create_status_line $1)"
   line="${line}\n"
-  line="${line}$(_with_print " $ ")"
+  line="${line}$(_create_prompt_line)"
+
+  _unset_options
 
   echo "${line}"
 }
 
 if command -v pip &> /dev/null && command -v powerline-daemon &> /dev/null; then
   POWERLINE_ROOT=$(pip show powerline-status | grep Location | cut -d" " -f2)
+  POWERLINE_PATH="${POWERLINE_ROOT}/powerline/bindings/bash/powerline.sh"
 
-  if [ -f "$POWERLINE_ROOT"/powerline/bindings/bash/powerline.sh ]; then
+  if [ -f "${POWERLINE_PATH}" ]; then
     powerline-daemon -q
 
     export POWERLINE_BASH_CONTINUATION=1
     export POWERLINE_BASH_SELECT=1
 
-    source "$POWERLINE_ROOT"/powerline/bindings/bash/powerline.sh
+    source "${POWERLINE_PATH}"
   fi
 else
   # no powerline is detected -> use custom prompt
@@ -321,6 +367,5 @@ else
   _set_prompt () {
     PS1="$(_create_prompt $?)"
   }
-
   PROMPT_COMMAND=_set_prompt
 fi
