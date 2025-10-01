@@ -1,5 +1,5 @@
 #
-## A simplified powerline prompt
+## A simplified shell-only powerline-like prompt
 #
 
 _with_color () {
@@ -53,12 +53,28 @@ _user_status () {
 _path_status () {
   line=""
 
-  if ! echo "${PWD}" | grep -q "${HOME}"; then
-    IFS="/" read -ra PARTS <<< "${PWD}"
-    PARTS[0]="/"
+  if [[ "$PWD" == "$HOME"* ]]; then
+    PATH_STR="~${PWD#$HOME}"
+    IS_HOME=1
   else
-    IFS="/" read -ra PARTS <<< "$(echo "${PWD}" | sed "s|${HOME}|~|g")"
+    PATH_STR="$PWD"
+    IS_HOME=0
   fi
+
+  PARTS=()
+  while IFS= read -r part; do PARTS+=("${part}"); done < <(
+    awk -v path="${PATH_STR}" -v home="${IS_HOME}" 'BEGIN {
+      n = split(path, a, "/");
+      count = 0;
+
+      for(i=1;i<=n;i++) if(a[i]!="") b[++count]=a[i];
+
+      if(path ~ /^\// && home==0){ parts[1]="/"; for(i=1;i<=count;i++) parts[i+1]=b[i]; count++; }
+      else { for(i=1;i<=count;i++) parts[i]=b[i]; }
+
+      for(i=1;i<=count;i++) print parts[i];
+    }'
+  )
 
   line="${line}$(_with_color "0;38;5;250;48;5;240")"
 
@@ -68,7 +84,7 @@ _path_status () {
     line="${line}$(_with_print "")"
     line="${line}$(_with_color "0;38;5;250;48;5;240")"
 
-    PARTS=("${PARTS[@]:-3}")
+    PARTS=("${PARTS[@]: -3}")
   fi
 
   length=${#PARTS[@]}
