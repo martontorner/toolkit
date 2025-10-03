@@ -23,20 +23,16 @@ __prompt_length () {
 }
 
 _with_color () {
-  color=$1
-
-  echo "%{\e[${color}m%}"
+  echo "%{\e[${1}m%}"
 }
 
 _with_print () {
-  info=$1
-
-  echo "${info}"
+  echo "${1}"
 }
 
 _with_merge() {
-  line_s=$1
-  line_e=$2
+  local line_s=$1
+  local line_e=$2
 
   line_s_length=$(__prompt_length "${line_s}")
   line_e_length=$(__prompt_length "${line_e}")
@@ -58,7 +54,7 @@ _unset_options () {
 # --- HELPERS --- #
 
 _host_status () {
-  line=""
+  local line=""
 
   line="${line}$(_with_color "0;38;5;31;48;49;22")"
   line="${line}$(_with_print "")"
@@ -71,7 +67,7 @@ _host_status () {
 }
 
 _user_status () {
-  line=""
+  local line=""
 
   line="${line}$(_with_color "0;38;5;229;48;5;166")"
   line="${line}$(_with_print "  $(whoami) ")"
@@ -82,7 +78,7 @@ _user_status () {
 }
 
 _path_status () {
-  line=""
+  local line=""
 
   PARTS=()
   if [[ "$PWD" == "$HOME"* ]]; then
@@ -124,9 +120,9 @@ _path_status () {
 }
 
 _repo_status () {
-  line=""
+  local line=""
 
-  branch=$(git branch 2> /dev/null | grep "\*" | sed -e "s/* \(.*\)/\1/")
+  local branch=$(git branch 2> /dev/null | grep "\*" | sed -e "s/* \(.*\)/\1/")
 
   if [ "$branch" ]; then
     line="${line}$(_with_color "0;38;5;240;48;5;236;22")"
@@ -194,9 +190,9 @@ _repo_status () {
 }
 
 _exit_status () {
-  line=""
+  local line=""
 
-  exit_code=$1
+  local exit_code=$1
 
   if [ "${exit_code}" -gt 0 ]; then
     line="${line}$(_with_color "0;38;5;240;48;5;52;22")"
@@ -214,7 +210,7 @@ _exit_status () {
 }
 
 _kube_status () {
-  line=""
+  local line=""
 
   line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
@@ -224,7 +220,7 @@ _kube_status () {
     line="${line}$(_with_print "   ")"
   fi
 
-  context=$(kubectl config current-context 2> /dev/null)
+  local context=$(kubectl config current-context 2> /dev/null)
 
   if [ "${context}" ]; then
     line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
@@ -235,16 +231,16 @@ _kube_status () {
 }
 
 _tool_status () {
-  line=""
+  local line=""
 
-  has_version=0
+  local has_version=0
 
-  python3_version=$(python3 -V 2> /dev/null)
-  python_version=$(python -V 2> /dev/null)
+  local python3_version=$(python3 -V 2> /dev/null)
+  local python_version=$(python -V 2> /dev/null)
 
-  node_version=$(node -v 2> /dev/null)
+  local node_version=$(node -v 2> /dev/null)
 
-  go_version=$(go version 2> /dev/null | awk '{print $3}')
+  local go_version=$(go version 2> /dev/null | awk '{print $3}')
 
   if [ "$python3_version" ]; then
     has_version=1
@@ -302,7 +298,7 @@ _tool_status () {
 }
 
 _time_status () {
-  line=""
+  local line=""
 
   line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
   line="${line}$(_with_print " $(date +'%I:%M %p')  ")"
@@ -315,8 +311,8 @@ _time_status () {
 }
 
 _create_status_line () {
-  l_line=""
-  r_line=""
+  local l_line=""
+  local r_line=""
 
   l_line="${l_line}$(_host_status)"
   l_line="${l_line}$(_user_status)"
@@ -336,7 +332,7 @@ _create_prompt_line () {
 }
 
 _update_prompt () {
-  line=""
+  local line=""
 
   _set_options
 
