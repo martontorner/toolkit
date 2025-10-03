@@ -5,21 +5,7 @@
 # --- HELPERS --- #
 
 __prompt_length () {
-  emulate -L zsh
-  local COLUMNS=${2:-$COLUMNS}
-  local -i x y=$#1 m
-  if (( y )); then
-    while (( ${${(%):-$1%$y(l.1.0)}[-1]} )); do
-      x=y
-      (( y *= 2 ));
-    done
-    local xy
-    while (( y > x + 1 )); do
-      m=$(( x + (y - x) / 2 ))
-      typeset ${${(%):-$1%$m(l.x.y)}[-1]}=$m
-    done
-  fi
-  echo $x
+  echo -e "$1" | sed -r 's/\%\{[^{]*\%\}//g' | { read -r s; echo "${#s}"; }
 }
 
 __with_color () {
