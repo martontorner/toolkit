@@ -216,9 +216,7 @@ _kube_status () {
   line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
 
-  docker=$(docker version 2> /dev/null)
-
-  if [ "${docker}" ]; then
+  if command -v docker &> /dev/null; then
     line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
     line="${line}$(_with_print "   ")"
   fi

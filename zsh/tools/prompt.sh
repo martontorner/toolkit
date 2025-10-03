@@ -84,28 +84,17 @@ _user_status () {
 _path_status () {
   line=""
 
-  if [[ "$PWD" == "$HOME"* ]]; then
-    PATH_STR="~${PWD#$HOME}"
-    IS_HOME=1
-  else
-    PATH_STR="$PWD"
-    IS_HOME=0
-  fi
-
   PARTS=()
-  while IFS= read -r part; do PARTS+=("${part}"); done < <(
-    awk -v path="${PATH_STR}" -v home="${IS_HOME}" 'BEGIN {
-      n = split(path, a, "/");
-      count = 0;
-
-      for(i=1;i<=n;i++) if(a[i]!="") b[++count]=a[i];
-
-      if(path ~ /^\// && home==0){ parts[1]="/"; for(i=1;i<=count;i++) parts[i+1]=b[i]; count++; }
-      else { for(i=1;i<=count;i++) parts[i]=b[i]; }
-
-      for(i=1;i<=count;i++) print parts[i];
-    }'
-  )
+  if [[ "$PWD" == "$HOME"* ]]; then
+    while IFS= read -r p; do
+      PARTS+=("$p")
+    done < <(printf '%s\n' "~${PWD#$HOME}" | tr '/' '\n')
+  else
+    while IFS= read -r p; do
+      PARTS+=("$p")
+    done < <(printf '%s\n' "${PWD#/}" | tr '/' '\n')
+    PARTS[0]="/"
+  fi
 
   line="${line}$(_with_color "0;38;5;250;48;5;240")"
 
@@ -230,9 +219,7 @@ _kube_status () {
   line="${line}$(_with_color "0;38;5;240;48;49;22")"
   line="${line}$(_with_print "")"
 
-  docker=$(docker version 2> /dev/null)
-
-  if [ "${docker}" ]; then
+  if command -v docker &> /dev/null; then
     line="${line}$(_with_color "0;38;5;252;48;5;240;1")"
     line="${line}$(_with_print "   ")"
   fi
