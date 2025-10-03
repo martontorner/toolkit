@@ -335,18 +335,18 @@ _create_prompt_line () {
   echo "$(_with_print " $ ")"
 }
 
-_create_prompt () {
+_update_prompt () {
   line=""
 
   _set_options
 
-  line="${line}$(_create_status_line $1)"
+  line="${line}$(_create_status_line $?)"
   line="${line}\n"
   line="${line}$(_create_prompt_line)"
 
   _unset_options
 
-  echo "${line}"
+  PS1=$(echo "${line}")
 }
 
 if command -v pip &> /dev/null && command -v powerline-daemon &> /dev/null; then
@@ -365,6 +365,5 @@ else
   # no powerline is detected -> use custom prompt
   export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-  set -o promptsubst
-  PS1='$(_create_prompt $?)'
+  precmd_functions+=(_update_prompt)
 fi
