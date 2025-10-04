@@ -145,7 +145,7 @@ Usage: github_clone_own <account> <name>
 }
 alias ghc='github_clone'
 # Clone own repo
-alias ghco='github_clone tornermarton'
+alias ghco='github_clone martontorner'
 
 
 # Deploy toolkit over ssh to a remote host
