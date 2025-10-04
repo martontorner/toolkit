@@ -1,4 +1,4 @@
-alias ll='ls -l -a -h -v -F --color=always'
+alias ll='ls -l -a -h -v -F --color=always --group-directories-first'
 alias tree='tree -C --dirsfirst'
 alias ..='cd ..'
 alias ...='cd ../..'
