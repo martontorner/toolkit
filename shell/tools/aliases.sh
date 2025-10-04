@@ -1,5 +1,8 @@
 alias ll='ls -l -a -h -v -F --color=always --group-directories-first'
 alias tree='tree -C --dirsfirst'
+
+alias cdd="cd ~/.dotfiles"
+alias cdt="cd ~/tmp"
 alias ..='cd ..'
 alias ...='cd ../..'
 
